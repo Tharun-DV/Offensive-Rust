@@ -4,11 +4,11 @@ use std::process::Command;
 
 fn execute_cmd(cmd: &str) -> String {
     // cmd.exe /c commands
-    let setup: String = "-c ".to_owned();
+    let setup: String = "/c".to_owned();
     let fullcmd: String = setup + cmd;
 
     let cmds: Vec<&str> = fullcmd.split(" ").collect();
-    let res = Command::new("/bin/bash").args(&cmds).output().unwrap();
+    let res = Command::new("cmd.exe").args(&cmds).output().unwrap();
     let stdout = String::from_utf8_lossy(res.stdout.as_slice());
     let stderr = String::from_utf8_lossy(res.stderr.as_slice());
 
@@ -27,5 +27,5 @@ fn main() {
         exit(0);
     }
     let rs = execute_cmd(&args[1]);
-    println!("{}", rs);
+    println!("{}",rs);
 }
